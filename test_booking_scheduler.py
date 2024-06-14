@@ -69,10 +69,32 @@ class BookingSchedulerTest(unittest.TestCase):
         self.assertIn("Sending SMS to 010-9999-9999 for schedule at 2024-06-14 11:00:00\n", output.getvalue())
 
     def test_이메일이_없는_경우에는_이메일_미발송(self):
-        pass
+        output = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output
+        try:
+            customer = Customer(NAME, PHONE_NUMBER)
+            date_object = self.make_date_object("2024-06-14 11:00:00")
+            schedule = Schedule(date_object, 3, customer)
+            scheduler = BookingScheduler(10)
+            scheduler.add_schedule(schedule)
+        finally:
+            sys.stdout = original_stdout
+        self.assertNotIn("Sending email", output.getvalue())
 
     def test_이메일이_있는_경우에는_이메일_발송(self):
-        pass
+        output = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output
+        try:
+            customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+            date_object = self.make_date_object("2024-06-14 11:00:00")
+            schedule = Schedule(date_object, 3, customer)
+            scheduler = BookingScheduler(10)
+            scheduler.add_schedule(schedule)
+        finally:
+            sys.stdout = original_stdout
+        self.assertIn("Sending SMS to 010-9999-9999 for schedule at 2024-06-14 11:00:00\n", output.getvalue())
 
     def test_현재날짜가_일요일인_경우_예약불가_예외처리(self):
         pass
