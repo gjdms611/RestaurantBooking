@@ -30,7 +30,12 @@ class BookingSchedulerTest(unittest.TestCase):
             self.fail()
 
     def test_시간대별_인원제한이_있다_같은_시간대에_Capacity_초과할_경우_예외발생(self):
-        pass
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:00:00")
+        schedule = Schedule(date_object, 11, customer)
+        scheduler = BookingScheduler(10)
+        with self.assertRaises(ValueError):
+            scheduler.add_schedule(schedule)
 
     def test_시간대별_인원제한이_있다_같은_시간대가_다르면_Capacity_차있어도_스케쥴_추가_성공(self):
         pass
