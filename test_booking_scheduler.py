@@ -38,7 +38,19 @@ class BookingSchedulerTest(unittest.TestCase):
             scheduler.add_schedule(schedule)
 
     def test_시간대별_인원제한이_있다_같은_시간대가_다르면_Capacity_차있어도_스케쥴_추가_성공(self):
-        pass
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:00:00")
+        scheduler = BookingScheduler(4)
+        schedule1 = Schedule(date_object, 3, customer)
+        date_object = self.make_date_object("2024-06-14 12:00:00")
+        schedule2 = Schedule(date_object, 3, customer)
+        try:
+            scheduler.add_schedule(schedule1)
+            scheduler.add_schedule(schedule2)
+            self.assertTrue(scheduler.has_schedule(schedule1))
+            self.assertTrue(scheduler.has_schedule(schedule2))
+        except ValueError as e:
+            self.fail()
 
     def test_예약완료시_SMS는_무조건_발송(self):
         pass
