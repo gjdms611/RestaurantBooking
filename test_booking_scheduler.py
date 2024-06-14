@@ -19,7 +19,15 @@ class BookingSchedulerTest(unittest.TestCase):
             scheduler.add_schedule(schedule)
 
     def test_예약은_정시에만_가능하다_정시인_경우_예약가능(self):
-        pass
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:00:00")
+        schedule = Schedule(date_object, 3, customer)
+        scheduler = BookingScheduler(10)
+        try:
+            scheduler.add_schedule(schedule)
+            self.assertTrue(scheduler.has_schedule(schedule))
+        except ValueError as e:
+            self.fail()
 
     def test_시간대별_인원제한이_있다_같은_시간대에_Capacity_초과할_경우_예외발생(self):
         pass
