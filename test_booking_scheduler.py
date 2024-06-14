@@ -4,13 +4,15 @@ from datetime import datetime
 from booking_scheduler import BookingScheduler
 from schedule import Customer, Schedule
 
+EMAIL = "test@test.com"
+PHONE_NUMBER = "010-9999-9999"
+NAME = "Name"
+
 
 class BookingSchedulerTest(unittest.TestCase):
     def test_예약은_정시에만_가능하다_정시가_아닌경우_예약불가(self):
-        customer = Customer("Name", "010-9999-9999", "test@test.com")
-        date_string = "2024-06-14 11:45:00"
-        date_format = "%Y-%m-%d %H:%M:%S"
-        date_object = datetime.strptime(date_string, date_format)
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:45:00")
         schedule = Schedule(date_object, 3, customer)
         scheduler = BookingScheduler(10)
         with self.assertRaises(ValueError):
@@ -39,6 +41,11 @@ class BookingSchedulerTest(unittest.TestCase):
 
     def test_현재날짜가_일요일이_아닌경우_예약가능(self):
         pass
+
+    def make_date_object(self, date_string):
+        date_format = "%Y-%m-%d %H:%M:%S"
+        date_object = datetime.strptime(date_string, date_format)
+        return date_object
 
 
 if __name__ == '__main__':
