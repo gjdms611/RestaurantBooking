@@ -4,7 +4,7 @@ import unittest
 class BookingSchedulerTest(unittest.TestCase):
 
     def test_예약은_정시에만_가능하다_정시가_아닌경우_예약불가(self):
-        pass
+        schedule = Schedule()
 
     def test_예약은_정시에만_가능하다_정시인_경우_예약가능(self):
         pass
