@@ -94,13 +94,26 @@ class BookingSchedulerTest(unittest.TestCase):
             scheduler.add_schedule(schedule)
         finally:
             sys.stdout = original_stdout
-        self.assertIn("Sending SMS to 010-9999-9999 for schedule at 2024-06-14 11:00:00\n", output.getvalue())
+        self.assertIn("Sending email", output.getvalue())
 
     def test_현재날짜가_일요일인_경우_예약불가_예외처리(self):
-        pass
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:00:00")
+        schedule = Schedule(date_object, 3, customer)
+        scheduler = BookingScheduler(10)
+        with self.assertRaises(ValueError):
+            scheduler.add_schedule(schedule)
 
     def test_현재날짜가_일요일이_아닌경우_예약가능(self):
-        pass
+        customer = Customer(NAME, PHONE_NUMBER, EMAIL)
+        date_object = self.make_date_object("2024-06-14 11:00:00")
+        schedule = Schedule(date_object, 3, customer)
+        scheduler = BookingScheduler(10)
+        try:
+            scheduler.add_schedule(schedule)
+            self.assertTrue(scheduler.has_schedule(schedule))
+        except ValueError as e:
+            self.fail()
 
     def make_date_object(self, date_string):
         date_format = "%Y-%m-%d %H:%M:%S"
