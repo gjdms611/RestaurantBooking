@@ -2,9 +2,14 @@ import io
 import sys
 import unittest
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from booking_scheduler import BookingScheduler
 from schedule import Customer, Schedule
+
+MONDAY = "2024-06-10 11:00:00"
+
+SUNDAY = "2024-06-09 11:00:00"
 
 NUMBER_OF_PEOPLE = 3
 DATE_STRING = "2024-06-14 11:00:00"
@@ -83,12 +88,16 @@ class BookingSchedulerTest(unittest.TestCase):
             sys.stdout = original_stdout
         self.assertIn("Sending email", output.getvalue())
 
-    def test_현재날짜가_일요일인_경우_예약불가_예외처리(self):
+    @patch.object(BookingScheduler, 'get_now')
+    def test_현재날짜가_일요일인_경우_예약불가_예외처리(self, mk_get_now):
+        mk_get_now.side_effect = [self.make_date_object(SUNDAY)]
         schedule = self.make_schedule()
         with self.assertRaises(ValueError):
             self.scheduler.add_schedule(schedule)
 
-    def test_현재날짜가_일요일이_아닌경우_예약가능(self):
+    @patch.object(BookingScheduler, 'get_now')
+    def test_현재날짜가_일요일이_아닌경우_예약가능(self, mk_get_now):
+        mk_get_now.side_effect = [self.make_date_object(MONDAY)]
         schedule = self.make_schedule()
         try:
             self.scheduler.add_schedule(schedule)
